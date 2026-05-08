@@ -1,0 +1,23 @@
+{
+  "project_number": 18,
+  "title": "FUNSD Form Understanding",
+  "methodology": "Document intelligence: token classification (4-class entity tagging in BIO scheme) + key-value linking on 199 scanned business forms. Baseline: BERT-base text-only fine-tune. Advanced: LayoutLMv3-base with bounding-box embeddings, image patches, and a multi-task linking head. LiLT documented as multilingual swap-in.",
+  "phase": "Phase 1 - scaffolded code-only",
+  "status": {
+    "folder_structure": true,
+    "brief_written": true,
+    "dataset_downloaded": true,
+    "eda_notebook_built": true,
+    "refs_verified_count": 32,
+    "baseline_script_built": true,
+    "advanced_script_built": true,
+    "manuscript_word_count": 4237,
+    "presentation_built": true
+  },
+  "needs_main_session_execution": [
+    "notebooks/01_EDA.ipynb",
+    "src/model_baseline.py",
+    "src/model_advanced.py"
+  ],
+  "blockers": []
+}
