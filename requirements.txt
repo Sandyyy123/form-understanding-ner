@@ -1,0 +1,7 @@
+matplotlib
+numpy
+pillow
+scikit-learn
+seaborn
+torch
+transformers
