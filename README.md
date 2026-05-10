@@ -1,4 +1,4 @@
-![Python](https://img.shields.io/badge/Python-3.10%2B-blue) ![NLP](https://img.shields.io/badge/Document-AI-purple) ![License](https://img.shields.io/badge/license-MIT-lightgrey)
+![Python](https://img.shields.io/badge/Python-3.10%2B-blue) ![NLP](https://img.shields.io/badge/Document-AI-purple) ![License](https://img.shields.io/badge/license-CC%20BY--NC%204.0-lightgrey)
 
 # FUNSD Form Understanding — Document NER and Key-Value Linking
 
