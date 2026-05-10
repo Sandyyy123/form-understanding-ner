@@ -30,7 +30,7 @@ Alternative backbones documented in the script
 - BROS (Hong 2022, AAAI): focuses on text + 2D positional encoding,
   no image branch (smaller / faster).
 
-Phase 1 scaffold: this script is NOT executed during scaffolding. The main
+Initial implementation: this script is NOT executed during implementation. The main
 session runs it once GPU is available. Estimated wall-clock on a single
 RTX 5090: 12-18 min for 5 epochs with image patches enabled.
 """
@@ -445,7 +445,7 @@ def entity_centroid(boxes_for_words):
 def train_and_eval_linking_head(model, processor, train_forms, test_forms):
     """Train and evaluate the linking head.
 
-    For the scaffold this uses a spatial-proximity heuristic ranker that
+    For the implementation this uses a spatial-proximity heuristic ranker that
     matches each `question` entity to its nearest unlinked `answer` entity
     (Manhattan distance on normalised centroids). In the full run, replace
     with a torch training loop over LinkingHead, using LayoutLMv3 hidden

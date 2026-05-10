@@ -9,7 +9,7 @@ Outputs (written to ../deliverables/):
 - metrics_baseline.json (per-class P/R/F1, support, macro / micro F1, eval loss)
 - confusion_matrix_baseline.png
 
-Phase 1 scaffold: this script is NOT executed during scaffolding. The main session
+Initial implementation: this script is NOT executed during implementation. The main session
 runs it once GPU is available. Estimated wall-clock on a single RTX 5090: 6-9 min
 for 10 epochs over 149 forms.
 """

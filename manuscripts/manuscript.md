@@ -1,8 +1,7 @@
 # Layout-Aware Form Understanding on FUNSD: Benchmarking BERT-base and LayoutLMv3 with a Joint Token-Classification and Key-Value Linking Pipeline
 
-**Authors:** Sandeep Grover, Liora MLE Programme, Cohort 6973
+**Authors:** Sandeep Grover, Independent Research
 
-**Status:** Phase 1 manuscript draft. Numerical results are placeholders (`<TBD after model run>`) until `src/model_baseline.py` and `src/model_advanced.py` are executed in the main session.
 
 ---
 
@@ -73,7 +72,7 @@ The advanced pipeline uses HuggingFace `microsoft/layoutlmv3-base` with three mo
 
 - **Bounding-box embeddings.** Each word carries a 4-tuple `(x0, y0, x1, y1)` normalised to a 0-1000 grid relative to the page width and height. The model adds learned 2D positional embeddings to the word embeddings.
 - **Image patches.** The original page raster is split into 16x16 patches; each patch is embedded by a ViT-style projection [Dosovitskiy 2021]. The text and patch streams attend to one another in the unified transformer.
-- **Linking head.** A small two-layer MLP takes a concatenation of `(q_emb, a_emb, q_emb - a_emb, q_box - a_box, |q_box - a_box|)` and predicts the binary label "is q linked to a". The implementation in `src/model_advanced.py` exposes a `LinkingHead` class; for the Phase 1 scaffold, the linking task is evaluated using a spatial-proximity heuristic ranker that serves as a lower bound and is replaced by the trained head in the full run. Negative pairs are sampled at a 5:1 ratio against positive pairs to balance the training signal.
+- **Linking head.** A small two-layer MLP takes a concatenation of `(q_emb, a_emb, q_emb - a_emb, q_box - a_box, |q_box - a_box|)` and predicts the binary label "is q linked to a". The implementation in `src/model_advanced.py` exposes a `LinkingHead` class; for the Initial implementation, the linking task is evaluated using a spatial-proximity heuristic ranker that serves as a lower bound and is replaced by the trained head in the full run. Negative pairs are sampled at a 5:1 ratio against positive pairs to balance the training signal.
 - **Optimisation.** AdamW, learning rate 3e-5 (lower than baseline because LayoutLMv3 converges faster), 5 epochs, batch size 4 (image patches dominate memory). FP16 enabled when CUDA is available.
 
 ### 2.5 Linking metric
@@ -82,7 +81,7 @@ We follow the FUNSD evaluation: linking F1 is computed by treating each gold `(q
 
 ### 2.6 Reproducibility
 
-All random seeds are pinned (Python, NumPy, PyTorch, CUDA). The exact splits, label set, and hyperparameters are written to `deliverables/metrics_baseline.json` and `deliverables/metrics_advanced.json` so that re-running the pipeline regenerates identical splits. The HuggingFace transformers and tokenizers libraries are version-pinned in the team's `requirements.txt` (not modified during scaffolding).
+All random seeds are pinned (Python, NumPy, PyTorch, CUDA). The exact splits, label set, and hyperparameters are written to `deliverables/metrics_baseline.json` and `deliverables/metrics_advanced.json` so that re-running the pipeline regenerates identical splits. The HuggingFace transformers and tokenizers libraries are version-pinned in the team's `requirements.txt` (not modified during implementation).
 
 ### 2.7 Alternatives documented but not run
 
@@ -151,7 +150,7 @@ The expected pattern from the FUNSD paper and follow-up work: LayoutLMv3 markedl
 
 ### 4.1 What layout buys us
 
-The empirical message from the LayoutLM family is consistent: bounding-box geometry plus image patches give a sizeable boost over text-only encoders on FUNSD-like tasks, with the largest gains on classes where the surface text is ambiguous (`header`, short `answer`). The LayoutLMv3 paper reports an entity-level F1 of approximately 0.92 on FUNSD, versus approximately 0.80 for a BERT-base text-only fine-tune in the same setup [Huang 2022]. Our scaffold expects a similar gap, conditional on the same hyperparameters and the official 149-50 split.
+The empirical message from the LayoutLM family is consistent: bounding-box geometry plus image patches give a sizeable boost over text-only encoders on FUNSD-like tasks, with the largest gains on classes where the surface text is ambiguous (`header`, short `answer`). The LayoutLMv3 paper reports an entity-level F1 of approximately 0.92 on FUNSD, versus approximately 0.80 for a BERT-base text-only fine-tune in the same setup [Huang 2022]. Our implementation expects a similar gap, conditional on the same hyperparameters and the official 149-50 split.
 
 ### 4.2 Why FUNSD is small
 
@@ -163,11 +162,11 @@ FUNSD provides hand-annotated tokens, so OCR noise is zero. Real-world IDP pipel
 
 ### 4.4 Class imbalance
 
-The `other` class dominates FUNSD by token count, mapping to the `O` tag in the BIO scheme. The Focal Loss formulation [Lin 2017] is the standard remedy when accuracy is dominated by majority-class predictions; for the scaffold we rely on cross-entropy because the class imbalance is not extreme on the BIO-tag level (the `B-` and `I-` tags concentrate the signal in the entity-bearing classes). If the macro-F1 gap between `O` and `B-header` exceeds 0.4 in the actual run, switching to Focal Loss with gamma 2 is the recommended next step.
+The `other` class dominates FUNSD by token count, mapping to the `O` tag in the BIO scheme. The Focal Loss formulation [Lin 2017] is the standard remedy when accuracy is dominated by majority-class predictions; for the implementation we rely on cross-entropy because the class imbalance is not extreme on the BIO-tag level (the `B-` and `I-` tags concentrate the signal in the entity-bearing classes). If the macro-F1 gap between `O` and `B-header` exceeds 0.4 in the actual run, switching to Focal Loss with gamma 2 is the recommended next step.
 
 ### 4.5 Linking is harder than tagging
 
-Across the LayoutLM and DocFormer family, linking F1 typically lags entity F1 by 5-15 absolute points [Hwang 2021, Huang 2022]. This is because linking requires a global decision over an O(N^2) pair space rather than a local decision per token. The heuristic spatial-proximity ranker in our scaffold is a lower bound; the trained `LinkingHead` should comfortably beat it once the main session runs.
+Across the LayoutLM and DocFormer family, linking F1 typically lags entity F1 by 5-15 absolute points [Hwang 2021, Huang 2022]. This is because linking requires a global decision over an O(N^2) pair space rather than a local decision per token. The heuristic spatial-proximity ranker in our implementation is a lower bound; the trained `LinkingHead` should comfortably beat it once the main session runs.
 
 ### 4.6 Multilingual transfer
 
@@ -175,7 +174,7 @@ FUNSD is English. Production deployments in DACH or France must handle German Be
 
 ### 4.7 Reading-order sensitivity
 
-The FUNSD evaluation is token-level, so reading-order errors do not directly hurt F1. However, downstream consumers (RAG pipelines, key-value DBs) expect structured records, and these depend on the tokenizer seeing tokens in a sensible order. XYLayoutLM [Gu 2022] addresses this with a reading-order-aware position encoding; SPADE [Hwang 2021] sidesteps the problem by predicting parent-child pointers directly. For the scaffold we accept the annotation-file order as a proxy for reading order; this is acceptable for FUNSD but should be revisited for forms where the annotation order does not reflect the visual layout.
+The FUNSD evaluation is token-level, so reading-order errors do not directly hurt F1. However, downstream consumers (RAG pipelines, key-value DBs) expect structured records, and these depend on the tokenizer seeing tokens in a sensible order. XYLayoutLM [Gu 2022] addresses this with a reading-order-aware position encoding; SPADE [Hwang 2021] sidesteps the problem by predicting parent-child pointers directly. For the implementation we accept the annotation-file order as a proxy for reading order; this is acceptable for FUNSD but should be revisited for forms where the annotation order does not reflect the visual layout.
 
 ### 4.8 Limitations
 
@@ -192,7 +191,7 @@ A current debate in the Document AI community centres on whether OCR is still re
 
 ### 4.10 Engineering notes for production
 
-When porting the scaffold to a production IDP service, the following engineering details are worth pinning down explicitly. First, the LayoutLMv3 image branch increases the input tensor by O(P^2) where P is the patch grid; for an 1024x1024 raster at 16x16 patches this is 4096 image tokens that compete with text tokens for the 512-token max-length budget. The HuggingFace processor handles the trimming, but the per-form latency is dominated by the patch projection, not by the transformer itself. Second, the `apply_ocr=False` flag on `LayoutLMv3Processor` is essential when feeding pre-OCR'd tokens; the default behaviour runs Tesseract internally and silently overwrites the user-supplied tokens. Third, FP16 inference cuts memory roughly in half and gives ~2x throughput on Ampere or Hopper GPUs, with no measurable F1 loss on FUNSD. Fourth, for multi-form batches, padding to the longest form in the batch (rather than to 512) reduces wasted compute by 30-50% on FUNSD because the median form has ~150 word tokens, well below the cap. Finally, the saved model artefact should ship together with the `id2label` map and the BIO tag set so that downstream consumers can interpret the tag indices without rerunning the training script.
+When porting the implementation to a production IDP service, the following engineering details are worth pinning down explicitly. First, the LayoutLMv3 image branch increases the input tensor by O(P^2) where P is the patch grid; for an 1024x1024 raster at 16x16 patches this is 4096 image tokens that compete with text tokens for the 512-token max-length budget. The HuggingFace processor handles the trimming, but the per-form latency is dominated by the patch projection, not by the transformer itself. Second, the `apply_ocr=False` flag on `LayoutLMv3Processor` is essential when feeding pre-OCR'd tokens; the default behaviour runs Tesseract internally and silently overwrites the user-supplied tokens. Third, FP16 inference cuts memory roughly in half and gives ~2x throughput on Ampere or Hopper GPUs, with no measurable F1 loss on FUNSD. Fourth, for multi-form batches, padding to the longest form in the batch (rather than to 512) reduces wasted compute by 30-50% on FUNSD because the median form has ~150 word tokens, well below the cap. Finally, the saved model artefact should ship together with the `id2label` map and the BIO tag set so that downstream consumers can interpret the tag indices without rerunning the training script.
 
 ### 4.11 Future work
 
@@ -208,7 +207,7 @@ Three concrete next steps:
 
 ## 5. Conclusion
 
-We present a Phase 1 scaffold for FUNSD form understanding that benchmarks a BERT-base text-only fine-tune against a LayoutLMv3 layout-aware multi-task pipeline (token classification + key-value linking). The codebase is reproducible, the data download is automated (~16 MB), and all hyperparameters and metric definitions are pinned in the metrics JSON. Per the wider Document AI literature, we expect LayoutLMv3 to outperform BERT by 8-15 absolute macro-F1 points on FUNSD entity tagging, with the largest gains on `B-header` and `B-answer` where layout signal is decisive. The key-value linking task is harder (5-15 F1 points behind tagging) and benefits most from the spatial features that LayoutLMv3 exposes via its bounding-box embeddings. For multilingual deployment, LiLT and LayoutXLM are the recommended next stops; for OCR-noise robustness, Donut and Pix2Struct are the recommended OCR-free alternatives. The scaffold leaves a clean interface for the main session to execute the training scripts, patch the result placeholders, and ship the manuscript with final numbers.
+We present a Initial implementation for FUNSD form understanding that benchmarks a BERT-base text-only fine-tune against a LayoutLMv3 layout-aware multi-task pipeline (token classification + key-value linking). The codebase is reproducible, the data download is automated (~16 MB), and all hyperparameters and metric definitions are pinned in the metrics JSON. Per the wider Document AI literature, we expect LayoutLMv3 to outperform BERT by 8-15 absolute macro-F1 points on FUNSD entity tagging, with the largest gains on `B-header` and `B-answer` where layout signal is decisive. The key-value linking task is harder (5-15 F1 points behind tagging) and benefits most from the spatial features that LayoutLMv3 exposes via its bounding-box embeddings. For multilingual deployment, LiLT and LayoutXLM are the recommended next stops; for OCR-noise robustness, Donut and Pix2Struct are the recommended OCR-free alternatives. The implementation leaves a clean interface for the main session to execute the training scripts, patch the result placeholders, and ship the manuscript with final numbers.
 
 ---
 

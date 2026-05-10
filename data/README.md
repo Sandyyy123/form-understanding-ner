@@ -6,7 +6,7 @@
 - Paper: Jaume G, Kemal Ekenel H, Thiran J. FUNSD: A Dataset for Form Understanding in Noisy Scanned Documents. ICDAR Workshops 2019. DOI:10.1109/ICDARW.2019.10029
 
 ## Already downloaded
-The dataset (~16 MB) has been fetched and extracted into this folder during scaffold:
+The dataset (~16 MB) has been fetched and extracted into this folder during implementation:
 
 ```
 data/
