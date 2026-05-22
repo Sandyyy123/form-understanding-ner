@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Form Understanding NER — Sandeep Grover</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
@@ -42,71 +41,32 @@ footer{text-align:center;padding:32px;color:var(--muted);font-size:.82rem;border
 </style>
 </head>
 <body>
-
 <nav>
   <a href="https://sandyyy123.github.io" class="nav-back">← Portfolio</a>
   <span class="nav-title">Form Understanding NER</span>
   <a href="https://github.com/Sandyyy123/form-understanding-ner" target="_blank" class="nav-back" style="margin-left:auto">GitHub ↗</a>
 </nav>
-
 <div class="hero">
   <h1>Form Understanding NER</h1>
   <p>Token-level entity tagging (question/answer/header/other) and key-value linking on scanned business forms using LayoutLM on the FUNSD benchmark.</p>
   <div class="badges"><span class="badge">LayoutLM</span> <span class="badge">pytesseract</span> <span class="badge">FUNSD</span> <span class="badge">seqeval</span></div>
   <div class="metric-bar">✦ F1 entity-level · FUNSD benchmark</div>
 </div>
-
 <div class="card">
   <div class="section-title">Interactive Demo</div>
   <div class="highlight">LayoutLM | FUNSD benchmark | 2D layout-aware NER</div>
   <p style="font-size:.82rem;color:#94a3b8;margin-bottom:16px">Entity F1 Score by Tag Type</p>
-  <div class="demo-container">
-<canvas id="myChart"></canvas>
-<script>
-new Chart(document.getElementById('myChart'), {
-  type: 'bar',
-  data: {
-    labels: ["Question", "Answer", "Header", "Other", "Weighted Avg"],
-    datasets: [{
-      label: 'F1 Score',
-      data: [0.821, 0.793, 0.867, 0.742, 0.808],
-      backgroundColor: ["rgba(99,102,241,0.7)", "rgba(99,102,241,0.7)", "rgba(139,92,246,0.85)", "rgba(99,102,241,0.7)", "rgba(99,102,241,0.7)"],
-      borderColor: 'rgba(99,102,241,0.3)',
-      borderWidth: 1,
-      borderRadius: 6
-    }]
-  },
-  options: {
-    responsive: true,
-    plugins: {
-      legend: { display: false },
-      tooltip: { callbacks: { label: ctx => ' ' + ctx.parsed.y.toLocaleString() } }
-    },
-    scales: {
-      y: {
-        beginAtZero: true,
-        grid: { color: 'rgba(255,255,255,0.05)' },
-        ticks: { color: '#94a3b8', font: { size: 11 } },
-        title: { display: true, text: 'F1 Score', color: '#818cf8', font: { size: 12 } }
-      },
-      x: { grid: { display: false }, ticks: { color: '#94a3b8', font: { size: 11 } } }
-    }
-  }
-});
-</script></div>
+  <div class="demo-container"><canvas id="myChart"></canvas><script>
+new Chart(document.getElementById('myChart'),{type:'bar',data:{labels:["Question", "Answer", "Header", "Other", "Weighted Avg"],datasets:[{label:'F1 Score',data:[0.821, 0.793, 0.867, 0.742, 0.808],backgroundColor:["rgba(99,102,241,0.7)", "rgba(99,102,241,0.7)", "rgba(139,92,246,0.9)", "rgba(99,102,241,0.7)", "rgba(99,102,241,0.7)"],borderRadius:6,borderWidth:0}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,grid:{color:'rgba(255,255,255,0.05)'},ticks:{color:'#94a3b8'},title:{display:true,text:'F1 Score',color:'#818cf8'}},x:{grid:{display:false},ticks:{color:'#94a3b8',font:{size:10},maxRotation:35}}}}});</script></div>
   <div class="stats-grid"><div class="stat-box"><span class="stat-value">FUNSD</span><span class="stat-label">Benchmark</span></div><div class="stat-box"><span class="stat-value">0.808</span><span class="stat-label">Weighted F1</span></div><div class="stat-box"><span class="stat-value">LayoutLM</span><span class="stat-label">Model</span></div><div class="stat-box"><span class="stat-value">149</span><span class="stat-label">Training Forms</span></div></div>
 </div>
-
 <div class="card">
   <div class="section-title">Tech Stack</div>
   <div class="badges" style="margin-bottom:0"><span class="badge">LayoutLM</span> <span class="badge">pytesseract</span> <span class="badge">FUNSD</span> <span class="badge">seqeval</span></div>
 </div>
-
 <footer>
-  <p>Built by <a href="https://sandyyy123.github.io">Sandeep Grover</a> ·
-     <a href="https://github.com/Sandyyy123/form-understanding-ner" target="_blank">GitHub Repo</a> ·
-     <a href="https://linkedin.com/in/sandeep-grover-b3192a16" target="_blank">LinkedIn</a></p>
+  <p>Built by <a href="https://sandyyy123.github.io">Sandeep Grover</a> &nbsp;·&nbsp;
+     <a href="https://github.com/Sandyyy123/form-understanding-ner" target="_blank">View on GitHub</a></p>
 </footer>
-
 </body>
 </html>
